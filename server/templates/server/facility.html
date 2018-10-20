@@ -1,0 +1,162 @@
+{% extends 'server/dashboard.html' %}
+
+{% block content %}
+
+
+ <div class="container-fluid" style="text-align: center;">
+      
+        <div id="table" style="display: inline-block;">
+      <table id="myTable" class="table table-hover">
+         
+          
+          <!--add-button Modal-->
+          
+          <a href="/add_facility/" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus-circle fa-4x"data-toggle="tooltip" data-placement="bottom" data-target="addModal" title="Add Facility" aria-hidden="true" style="float: right"></i></a>
+          <!--modal-->
+          
+          <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add new Facility</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+                <form action="/add_facility/" method="POST">
+              <div class="modal-body">
+             
+              <div class="row">
+                <div class="col">
+                    
+                  <div class="form-group">
+                    <label class="section-subheading text-primary"><i class="fa fa-user"> </i> Facility Name</label>
+                    <p><input type="text" class="form-control" id="name" placeholder="Enter Facility Name" name="name"></p>
+                  </div>
+                  <div class="form-group">
+                    <label class="section-subheading text-primary"><i class="fa fa-user"></i> Quantity</label>
+                    <p><input type="text" class="form-control"id="quantity" placeholder="Enter quantity" name="quantity"></p>
+                  </div>
+                  <div class="form-group">
+                            <label class="section-subheading text-primary"><i class="fa fa-user"></i> Status</label>
+                            <br>
+                            <input type="radio" name="status" value="1" checked><label>Available</label>
+                            <br>
+                            <input type="radio" name="status" value="0"><label>Not available</label>
+                            <br>
+                  </div>
+
+                 
+          </div></div>          
+                </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>          
+            </form>
+
+              </div>
+              </div>
+
+<thead class="thead-dark">
+  <tr>
+    <th scope="col">Facility Name</th>
+    <th scope="col">Quantity</th>
+    <th scope="col">Status</th>
+  
+    <th scope="col">Edit Info</th>
+    <th scope="col">Action</th>
+    
+
+  </tr>
+</thead>
+
+<tbody>
+     
+    {% for facility in facilities.data %}
+    <tr>
+      <td>{{ facility.name }}</td>
+      <td>{{ facility.quantity }}</td>
+      {% if facility.status == 1 %}
+      <td>AVAILABLE</td>
+      {% endif %}
+      {% if facility.status == 0 %}
+      <td>NOT AVAILABLE</td>
+      {% endif %}
+    
+      <td>
+        <a onclick="get_one({{ facility.id }})" href="/edit_facility/{{ facility.id }}" data-toggle="modal" data-target="#exampleModal"
+          data-row-val1="{{ facility.id }}" data-row-val="{{ facility.name }}" class="edit-data">
+          <i class="fa  fa-edit fa-2x"></i>
+        </a>
+      </td>
+      {% if facility.status == 1 %}
+      <td><a href="/del_facility/{{ facility.id }}"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+      {% endif %}
+      {% if facility.status == 0 %}
+      <td><a href="/act_facility/{{ facility.id }}"><i class="fa fa-plus-square fa-2x" aria-hidden="true"></i></a></td>
+      {% endif %}
+    
+    </tr>
+    {% endfor %}
+
+
+</tbody>
+
+
+
+
+            </div>
+</table>
+                </div>
+
+    
+    <!-- Modal for edit facility-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-color">
+
+        <input type="text" readonly class="form-control-plaintext section-subheading text-primary" id="pid" value="">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="form1" action="" method="POST">
+        <div class="modal-body modal-color">
+
+          <div class="row">
+            <div class="col">
+
+              <div class="form-group">
+                <label class="section-subheading text-primary"><i class="fa fa-user"> </i> Facility Name</label>
+                <p><input type="text" class="form-control" id="name" placeholder="Enter Facility Name" name="name"></p>
+              </div>
+              <div class="form-group">
+                <label class="section-subheading text-primary"><i class="fa fa-user"></i> Quantity</label>
+                <p><input type="text" class="form-control" id="quantity" placeholder="Enter quantity" name="quantity"></p>
+              </div>
+              <div class="form-group">
+                <label class="section-subheading text-primary"><i class="fa fa-user"></i> Status</label>
+                <p><input type="number" step="1" class="form-control" id="status" placeholder="" name="status"></p>
+
+              </div>
+
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</div>
+    
+    </div>
+
+{% endblock %}

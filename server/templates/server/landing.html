@@ -1,0 +1,185 @@
+<html>
+    
+    <head>
+    
+        <title> SCS - FEM </title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google-signin-client_id" content="15454486122-jo6l63u3n5di3vgv0op9ujf7mcvprcc5.apps.googleusercontent.com">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        
+        <style type="text/css">
+            
+            body{
+                padding: 0;
+                margin: 0;
+            }
+        
+            .main{
+                background-image: url('../images/landing.jpg');
+                background-size: 100% 100%;               
+                height: 100%;
+                width: 100%;
+                background-repeat:no-repeat;
+                position: relative;
+                
+            }
+            
+            .login-box{
+                height: 340px;
+                width: 400px;
+                border-radius:5%;
+                background-color: aliceblue;
+                position: relative;
+                top:-40px;
+                left: 150px;
+              
+            }
+            
+            .login-box:hover{
+                box-shadow: 5px 10px 8px #888888;
+            }
+            .login-box-header{
+                height: 150px;
+                width: 600px;
+                position: relative;
+                top: 50px;
+                left:750px;
+                  
+                    
+            }
+            .login-box-header h1{
+                font-family: "Arial Black", Gadget, sans-serif;
+                font-size: 200;
+                font-weight: bold;
+                color:azure;
+                text-shadow: 2px 2px 4px #000000;
+                
+            }
+            .login-box-header p{
+                font-family: "Arial Black", Gadget, sans-serif;
+                font-size: 40;
+                font-weight: lighter;
+                color: azure;
+                text-shadow: 2px 2px 4px #000000;
+            }
+            
+            .log-form{
+                position: relative;
+                top: 50px;
+            }
+              #login-header{
+                font-family: "Arial Black", Gadget, sans-serif;
+                  font-size: 30px;
+                  font-weight: bold;
+                  color: #1DA1F2;
+            }
+            
+            .login-box{
+                text-align: center;
+            }
+        
+        </style>
+    
+    </head>
+    
+    <body>
+        <div class="main">
+            
+                <div class="login-box-header">
+               <h1>SCS</h1>
+                <p>Facilities and Equipment Management</p>
+                </div>
+              <div class="login-box">
+                <div class="log-form">
+                  <p id="login-header">Log in to SCS-FEM</p>
+                    <div style="align-content: left; margin-left: 8.5em !important" class="g-signin2" data-onsuccess="onSignIn"></div>
+   
+                    <p>
+                         Sign in using g.msu.iit account
+                    </p>
+                </form>
+            </div>
+            
+        
+        </div>
+    
+    
+        </div>
+    
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+        
+        </script>
+        <script>
+
+    function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        console.log('Token ID: ' + googleUser.getAuthResponse().id_token);
+        console.log('Token Type: ' + googleUser.getAuthResponse().token_type);
+        console.log('Expires In: ' + googleUser.getAuthResponse().expires_in);
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+
+
+        var name = profile.getName();
+        var email = profile.getEmail();
+        var image = profile.getImageUrl();
+        var token = googleUser.getAuthResponse().id_token;
+        var ttl = googleUser.getAuthResponse().expires_in;
+
+        localStorage.setItem("name", name);
+        localStorage.setItem("email", email);
+        localStorage.setItem("image", image);
+        // localStorage.setItem("token", token);
+        localStorage.setItem("ttl", ttl);
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:5000/login/',
+            data: {
+              'fullname': name,
+              'email': email,
+                'image': image,
+              'token': token,
+              'ttl': ttl
+            },
+            success: function(resp) {
+                console.log('Response: ' + resp);
+                if(resp == "Succesfully added token."){
+                            window.location.href="/dashboard/";
+                    }else{
+                        $( "#loading" ).hide();
+                        alert(resp.message);
+                    }
+
+            },
+            error: function(e) {
+                console.log('Error: ' + JSON.stringify(e));
+            }
+        });
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+        console.log('User signed out.');
+        });
+  }
+</script>
+
+    </body>
+
+
+
+</html>
+
